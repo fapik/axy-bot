@@ -9,7 +9,6 @@ class Handler {
   }
   async get() {
     const { dir } = this;
-    console.log(dir)
     const required = [];
     const files = await readdir(dir);
     for(const file of files) {

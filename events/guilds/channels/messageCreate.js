@@ -1,6 +1,6 @@
 module.exports = (axy) => {
   console.log('teste')
-  axy.on("messageCreate", (message) => {
+  axy.on("messageCreate", async(message) => {
     const {
        author,
     
@@ -15,8 +15,14 @@ module.exports = (axy) => {
     const command = args.shift().toLowerCase();
     
     const cmd = axy.commands.get(command);
+    const handleErr = (error) => message.channel.send(`Algo deu muuuuuuuuuuuuuito errado ao tentar executar este comando... \`${error}\` reporte esse bug em https://github.com/fapik/axy-bot/issues.`)
     if(cmd) {
-      cmd.run(axy, message, args)
+      try {
+         const running = cmd.run(axy, message, args)
+          if(running instanceof Promise) running.catch(handleErr)
+      } catch(err) {
+        handleErr(err)
+      }
     }
   })
 }
